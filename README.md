@@ -17,6 +17,9 @@ Options:
      -e <s>          Couchbase cluster SSL enabled or not (default: false)
      -ks <s>          Keystore full path
      -kp <s>         Keystore password used during creating the store
+     
+     -t <n>          Number of threads you would like to spawn (default: 1)
+     -d <n>          Number of documents you would like to load into the bucket (default: 100) 
  ```    
  
 
