@@ -30,7 +30,20 @@ You can simply cd to bin directory first
 ```
 $cd bin
 
-$ java -jar cbloadgen.jar -t 10 -d 100000 -h 10.112.185.101 -u Administrator -p password -b default
+$ java -jar cbloadgen.jar -t 10 -d 100000 -h localhost -u Administrator -p password -b default
+
+or 
+
+$ java -jar cbloadgen.jar -t 10 -d 100000
+
+Connection created.
+..........................
+*****************************************************************
+Time elapsed: 27223 ms
+Average Throughput: 3673 ops/sec
+Average Latency: 0.27 ms
+*****************************************************************
+
 
 ```
 
@@ -39,7 +52,19 @@ $ java -jar cbloadgen.jar -t 10 -d 100000 -h 10.112.185.101 -u Administrator -p 
 ```
 $cd bin
 
-java -jar cbloadgen.jar -t 10 -d 5000 -h ckdemo-0000.ckdemo.sewestus.com -u Administrator \
+$ java -jar cbloadgen.jar -t 10 -d 100000 -h localhost -u Administrator \
 -p password -b default -e true -ks ~/.keystore -kp password
 
+or 
+
+$ java -jar cbloadgen.jar -t 10 -d 100000  -e true -ks ~/.keystore \
+-kp password
+
+Connection created.
+..........................
+*****************************************************************
+Time elapsed: 27223 ms
+Average Throughput: 3673 ops/sec
+Average Latency: 0.27 ms
+*****************************************************************
 ```
