@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import com.couchbase.client.deps.io.netty.util.internal.StringUtil;
+
 import couchbase.sample.exception.ArgException;
 import couchbase.sample.loader.loadgen.Progress;
 import couchbase.sample.loader.loadgen.WorkerNode;
@@ -34,12 +36,19 @@ public class LoadRunner {
 			
 			//1. CB User
 			CB_USER = argsHash.get("-u");
+			CB_USER = StringUtil.isNullOrEmpty(CB_USER)?"Administrator":CB_USER;
+			
 			//2. CB password
 			CB_PASSWORD = argsHash.get("-p");
+			CB_PASSWORD = StringUtil.isNullOrEmpty(CB_PASSWORD)?"password":CB_PASSWORD;
+			
 			//3. CB Bucket 
 			CB_BUCKET = argsHash.get("-b");
+			CB_BUCKET = StringUtil.isNullOrEmpty(CB_BUCKET)?"default":CB_BUCKET;
+			
 			//4. CB cluster host FQDN or IP
 			CB_CLUSTER = argsHash.get("-h");
+			CB_CLUSTER = StringUtil.isNullOrEmpty(CB_CLUSTER)?"localhost":CB_CLUSTER;
 			
 			//5. SSL enabled or not
 			SSL_ENABLED = Boolean.parseBoolean(argsHash.get("-e"));
@@ -82,10 +91,10 @@ public class LoadRunner {
 				//start a new thread to generate load on the system
 				Thread t = new Thread(wn, "Thread "+i);
 				t.start();
-				System.out.println("Thread: " + i + " started");
+				
 				//add thread t to the tList
 				tList.add(t);
-				System.out.println("Thread: " + i + " added");
+				
 			}//EOF for
 			
 			// Now wait for all of the threads to complete
