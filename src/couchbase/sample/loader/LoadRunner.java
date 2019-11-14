@@ -70,7 +70,7 @@ public class LoadRunner {
 			//Docs per thread
 			int docPerThread = docs/threads;
 
-			System.out.print("Loading customer data into database ..");
+			System.out.print("Loading customer data into database ..\n");
 			
 			//show progress dot
 			Progress p = new Progress();
@@ -125,6 +125,7 @@ public class LoadRunner {
 			System.exit(1);
 		}catch(Exception e){
 			e.printStackTrace();
+			System.exit(1);
 		}
 
 	}//EOF main

@@ -1,9 +1,10 @@
 package couchbase.sample.dao;
 
 
-import java.util.Arrays;
-import java.util.List;
+//import java.util.Arrays;
+//import java.util.List;
 
+import com.couchbase.client.core.env.KeyValueServiceConfig;
 import com.couchbase.client.java.*;
 import com.couchbase.client.java.document.*;
 import com.couchbase.client.java.document.json.*;
@@ -40,13 +41,13 @@ public class BaseDAO {
 	 * @throws ArgException
 	 */
 	public BaseDAO(String node, String user, String passwd, String bucket) throws ArgException{
-		this(Arrays.asList(node), user, passwd, bucket, false, null, null);
+		init(node, user, passwd, bucket, false, null, null);
 	}
 	
 	public BaseDAO(String node, String user, String passwd, String bucket, boolean sslEnabled, String ksFilePath, String ksPwd) 
 			throws ArgException
 	{
-		this(Arrays.asList(node), user, passwd, bucket, sslEnabled, ksFilePath, ksPwd);
+		init(node, user, passwd, bucket, sslEnabled, ksFilePath, ksPwd);
 		
 	}
 
@@ -59,7 +60,7 @@ public class BaseDAO {
 	 * @param bucket -  where data will be written to
 	 * @throws ArgException
 	 */
-	public BaseDAO(List<String> nodes, String user, String passwd, String bucket, boolean sslEnabled, 
+	public static void init(String node, String user, String passwd, String bucket, boolean sslEnabled, 
 			String ksFilePath, String ksPwd) throws ArgException
 	{
 		//System.out.println("SSL enabled="+ sslEnabled + " env: " + env);
@@ -73,19 +74,31 @@ public class BaseDAO {
 					.computationPoolSize(5)
 					.connectTimeout(5000)
 					.socketConnectTimeout(5000)
-					.queryTimeout(40000)
-					.kvTimeout(20000)
+					.queryTimeout(15000)
+					.kvTimeout(2500)
+					.keyValueServiceConfig(KeyValueServiceConfig.create(2))
 					.sslEnabled(sslEnabled)
 					.sslKeystoreFile(ksFilePath)
 					.sslKeystorePassword(ksPwd)
 					.build();
 		}
 		
-		if(nodes!=null && StringUtil.isNotEmpty(user) && StringUtil.isNotEmpty(passwd)){
+		if(StringUtil.isNotEmpty(node) && StringUtil.isNotEmpty(user) && StringUtil.isNotEmpty(passwd)){
 			// Initialize the Connection
 			if(sampleBucket==null) {
-
-				cluster = CouchbaseCluster.create(env, nodes);
+				
+				int index = node.indexOf("couchbase://");
+				System.out.print("node: " + node + ", user: " + user + ", bucket: " + bucket + ", isSSLEnabled: " +
+					 sslEnabled + ", ksFilePath: " + ksFilePath + ", isConnectionStr: " + index);
+				
+				//confirm node is not a connectionString
+				if(index<0) {
+					cluster = CouchbaseCluster.create(env, node);
+					System.out.println("node: " + node + " is being used to connect.\n");
+				}else {
+					cluster = CouchbaseCluster.fromConnectionString(env, node);
+					System.out.println("connectionString: " + node + " is used to connect.\n");
+				}
 				cluster.authenticate(user, passwd);
 				//if bucket is not set or empty then default to "test" bucket
 				if(StringUtil.isEmpty(bucket))
